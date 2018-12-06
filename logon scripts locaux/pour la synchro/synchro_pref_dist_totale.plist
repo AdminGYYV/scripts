@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>Label</key>
+		<string>synchro_pref_dist_totale</string>
+		<key>ProgramArguments</key>
+		<array>
+			<string>/.gyyv/sync/synchro_totale.sh</string>
+			<string>synchro</string>
+		</array>
+		<key>WatchPaths</key>
+		<array>
+			<string>/.gyyv/sync/aliases/app1</string>
+			<string>/.gyyv/sync/aliases/app2</string>
+			<string>/.gyyv/sync/aliases/app3</string>
+			<string>/.gyyv/sync/aliases/app4</string>
+			<string>/.gyyv/sync/aliases/app5</string>
+			<string>/.gyyv/sync/aliases/app6</string>
+			<string>/.gyyv/sync/aliases/app7</string>
+			<string>/.gyyv/sync/aliases/app8</string>
+			<string>/.gyyv/sync/aliases/app9</string>
+			<string>/.gyyv/sync/aliases/app10</string>
+			<string>/.gyyv/sync/aliases/app11</string>
+			<string>/.gyyv/sync/aliases/app12</string>
+			<string>/.gyyv/sync/aliases/app13</string>
+			<string>/.gyyv/sync/aliases/app14</string>
+			<string>/.gyyv/sync/aliases/app15</string>
+			<string>/.gyyv/sync/aliases/app16</string>
+		</array>
+	</dict>
+</plist>
