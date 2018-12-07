@@ -60,8 +60,9 @@ synchro_data_user="$dist_user_folder""/synchro_data.csv"
 
 ############################################### 
 # pour debug
-log_file="/dev/stdout"
-#log_file=~/Desktop/test.txt
+#log_file="/dev/stdout"
+log_file=~/Desktop/test.txt
+touch $log_file
 now=$(date +"%T")
 
 ############################################### 
@@ -175,6 +176,8 @@ GROUPE_PROFS="maitreslocaux"
 			fi	
 		fi
 
+echo "GROUPE : $GROUPE" >> $log_file
+
 ############################################### 
 # nom du dossier distant (serveur) de l'utilisateur
 dist_folder_name="$USER"
@@ -209,15 +212,15 @@ mount_dist_user_folder ()
 {
 	# A n'executer que si le dossier distant n'est pas monté automatiquement par le système
 	# Cela dépend de la config du serveur de fichier smb	
-	if [$GROUPE == "maitres"]
+	if [ $GROUPE = "maitres" ]
 	then
 		python $SCRIPT_MOUNT_MAITRES
 	else
-		if [$GROUPE == "eleves"]
+		if [ $GROUPE = "eleves" ]
 		then
 			python $SCRIPT_MOUNT_ELEVES
 		else
-			echo "Impossible de monter le homedir distant - groupe inconnu" >> $log_file
+			echo "Impossible de monter le homedir distant - groupe inconnu $GROUPE" >> $log_file
 		fi
 	fi
 			
@@ -260,7 +263,7 @@ copy_to_local ()
 	# debut de la boucle de copie vers le dossier local
 	# lecture de toutes les informations sur les données à synchroniser necessaires dans le fichier csv
 	# les infos se trouvent à partir de la 3e ligne
-	tail -n +3 $csv_file | while IFS="," read -r pref_local_watch app_dist_folder app_local_folder app_pref
+	tail -n +3 $csv_file | while IFS=";" read -r pref_local_watch app_dist_folder app_local_folder app_pref
 	do
 		
 		# crée les alias des fichiers/dossiers à surveiller pour la synchronisation
@@ -275,7 +278,7 @@ copy_to_local ()
 		dist_folder="$dist_synchro""$app_dist_folder"
 		dist_pref="$dist_folder""$app_pref"
 		
-		echo "script de login : $now" >> $log_file
+		echo "script de synchro pour $pref_local_watch : $now" >> $log_file
 		echo "local_folder is     : $local_folder" >> $log_file
 		echo "local_pref is: $local_pref" >> $log_file
 		echo "dist_folder is  : $dist_folder" >> $log_file
@@ -293,6 +296,7 @@ copy_to_local ()
 		
 		# copie du dossier/fichier distant dans le dossier/fichier local
 		# option -u pour ne pas effacer un fichier plus récent sur la destination
+		echo "ici"
 		rsync -av -u "$dist_pref" "$local_pref"
 		if [[ $? -gt 0 ]] 
 			then
@@ -317,7 +321,7 @@ copy_to_dist ()
 	# debut de la boucle de copie vers le dossier distant
 	# lecture de toutes les informations sur les données à synchroniser necessaires dans le fichier csv (séparateur virgule)
 	# les infos se trouvent à partir de la 3e ligne
-	tail -n +3 $synchro_data | while IFS="," read -r pref_local_to_watch app_dist_folder app_local_folder app_pref
+	tail -n +3 $synchro_data | while IFS=";" read -r pref_local_to_watch app_dist_folder app_local_folder app_pref
 	do
 
 		# définition des dossiers distants et locaux et des données à synchroniser
@@ -328,11 +332,11 @@ copy_to_dist ()
 		echo "script synchro : $now" >> $log_file
 		echo "local_pref is       : $local_pref" >> $log_file
 		echo "dist_pref is        : $dist_pref" >> $log_file
-		
+		echo "$"
 		# copie du dossier/fichier local dans le dossier/fichier distant
 		# option -u pour ne pas effacer un fichier plus récent sur la destination
 		# option --no-p pour éviter des problèmes d'autorisations en copiant sur le dossier SMB (Bug ?)
-		rsync -av --no-p -u "$local_pref" "$dist_pref" 
+		rsync -av --no-p -u "$local_pref" "$dist_pref"
 		if [[ $? -gt 0 ]] 
 			then
 				message="Problème lors de la copie du dossier local\nvers ""$dist_folder_name"

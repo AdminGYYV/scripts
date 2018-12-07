@@ -1,7 +1,8 @@
-Fichier/Dossier a surveiller;Dossier Distant;Dossier local;"fichier local ( ""/"" pour tous les fichiers du dossier)"
+﻿Fichier/Dossier a surveiller;Dossier Distant;Dossier local;"fichier local ( ""/"" pour tous les fichiers du dossier)"
 pref_local_watch;app_dist_folder;app_local_folder;app_pref
 /Library/Safari/Bookmarks.plist;Safari;/Library/Safari;/Bookmarks.plist
 /Library/Preferences/com.apple.Safari.plist;Safari;/Library/Preferences;/com.apple.Safari.plist
 /Library/Application Support/LibreOffice/4/user;LibreOffice/4/user;/Library/Application Support/LibreOffice/4/user;/
 /Library/Application Support/OpenBoard/document;OpenBoard;/Library/Application Support/OpenBoard;/
 /Library/Application Support/InsightIntermediateItools;InsightIntermediate;/Library/Application Support/InsightIntermediateItools;/
+/Library/Application Support/InsightUpperIntermediateItools;InsightUpperIntermediate;/Library/Application Support/InsightUpperIntermediateItools;/
