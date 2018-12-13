@@ -32,7 +32,7 @@
 
 ### Dans le homedir distant
 #	$dist_user_folder
-#		|- sync					($dist_synchro) dossier contenant toutes les données à synchroniser
+#		|- .sync					($dist_synchro) dossier contenant toutes les données à synchroniser
 #
 
 
@@ -47,16 +47,26 @@ SCRIPT_MOUNT_ELEVES="$LOCAL_REPO""fs_mount_script.py"
 SCRIPT_MOUNT_MAITRES="$LOCAL_REPO""fima_mount_script.py"
 
 # définit le fichier global qui contient les infos sur les dossiers à copier
-synchro_data="$LOCAL_DIR_PATH/synchro_data.csv"
+CONFIG_FILE="synchro_data.csv"
+synchro_data="$LOCAL_DIR_PATH/$CONFIG_FILE"
 
 
 # définit le fichier de $USER qui contient les infos sur les dossiers à copier
 # cela permet à certains utilisateurs de synchroniser des éléments supplémentaires
-synchro_data_user="$dist_user_folder""/synchro_data.csv"
+synchro_data_user="$dist_user_folder""/$CONFIG_FILE"
 
 ######################################################################
 ######################################################################
+# Télécharge le fichier de config $synchro_data
 
+if [ -d "$LOCAL_DIR_PATH" ]
+then
+	cd "$LOCAL_DIR_PATH"
+
+	curl http://media.gyyv.vd.ch:81/$CONFIG_FILE -o "$CONFIG_FILE"
+	
+	chmod 755 "$synchro_data"
+fi
 
 ############################################### 
 # pour debug
@@ -91,6 +101,7 @@ if ! ping -q -W 1 -c 1 $gateway > /dev/null; then
 	echo "$now : $0  $1  "$message >> $log_file
 	exit
 fi
+
 
 ###########################################################################################
 ###########################################################################################
@@ -171,7 +182,7 @@ GROUPE_PROFS="maitreslocaux"
 			then
 				GROUPE="maitres"
 			else
-				echo "utilisateur non AD -> EXIT" >> $log_file
+				echo "utilisateur non OD ou pas dans maitre_loc -> EXIT" >> $log_file
 				exit
 			fi	
 		fi
@@ -180,15 +191,15 @@ echo "GROUPE : $GROUPE" >> $log_file
 
 ############################################### 
 # nom du dossier distant (serveur) de l'utilisateur
-dist_folder_name="$USER"
+dist_folder_name="$USER""_data"
 
 # chemin du dossier distant (serveur) de l'utilisateur
 dist_user_folder="/Volumes/$dist_folder_name/"
-#echo $dist_folder >> $log_file
+#echo "Répertoire dist_user_folder :"$dist_user_folder >> $log_file
 
 ###############################################
 # definit le nom du dossier contenant les pref de toutes les applications dans le dossier distant
-dist_synchro="$dist_user_folder""sync/"
+dist_synchro="$dist_user_folder"".sync/"
 
 
 ###############################################
@@ -263,7 +274,7 @@ copy_to_local ()
 	# debut de la boucle de copie vers le dossier local
 	# lecture de toutes les informations sur les données à synchroniser necessaires dans le fichier csv
 	# les infos se trouvent à partir de la 3e ligne
-	tail -n +3 $csv_file | while IFS=";" read -r pref_local_watch app_dist_folder app_local_folder app_pref
+	tail -n +3 $csv_file | while IFS="," read -r pref_local_watch app_dist_folder app_local_folder app_pref
 	do
 		
 		# crée les alias des fichiers/dossiers à surveiller pour la synchronisation
@@ -300,7 +311,7 @@ copy_to_local ()
 		rsync -av -u "$dist_pref" "$local_pref"
 		if [[ $? -gt 0 ]] 
 			then
-				message="Problème lors de la copie de ""$dist_folder_name""\nvers le dossier local"
+				message="Problème lors de la copie de ""$dist_folder_name""\n vers le dossier local"
 				osascript -e "display dialog \"$message\" with title \"Attention\" buttons \"OK\" default button \"OK\" " &
 			else
 	   			echo "Rsync to local OK" >> $log_file
@@ -321,7 +332,7 @@ copy_to_dist ()
 	# debut de la boucle de copie vers le dossier distant
 	# lecture de toutes les informations sur les données à synchroniser necessaires dans le fichier csv (séparateur virgule)
 	# les infos se trouvent à partir de la 3e ligne
-	tail -n +3 $synchro_data | while IFS=";" read -r pref_local_to_watch app_dist_folder app_local_folder app_pref
+	tail -n +3 $synchro_data | while IFS="," read -r pref_local_to_watch app_dist_folder app_local_folder app_pref
 	do
 
 		# définition des dossiers distants et locaux et des données à synchroniser
@@ -333,16 +344,20 @@ copy_to_dist ()
 		echo "local_pref is       : $local_pref" >> $log_file
 		echo "dist_pref is        : $dist_pref" >> $log_file
 		echo "$"
-		# copie du dossier/fichier local dans le dossier/fichier distant
-		# option -u pour ne pas effacer un fichier plus récent sur la destination
-		# option --no-p pour éviter des problèmes d'autorisations en copiant sur le dossier SMB (Bug ?)
-		rsync -av --no-p -u "$local_pref" "$dist_pref"
-		if [[ $? -gt 0 ]] 
-			then
-				message="Problème lors de la copie du dossier local\nvers ""$dist_folder_name"
-				osascript -e "display dialog \"$message\" with title \"Attention\" buttons \"OK\" default button \"OK\" " &
-			else
-	   			echo "Rsync to distant OK" >> $log_file
+		
+		if [ -d $local_pref ] || [ -d $local_pref ]
+		then
+			# copie du dossier/fichier local dans le dossier/fichier distant
+			# option -u pour ne pas effacer un fichier plus récent sur la destination
+			# option --no-p pour éviter des problèmes d'autorisations en copiant sur le dossier SMB (Bug ?)
+			rsync -av --no-p -u "$local_pref" "$dist_pref"
+			if [[ $? -gt 0 ]] 
+				then
+					message="Problème lors de la copie du dossier local\n vers ""$dist_folder_name"
+					osascript -e "display dialog \"$message\" with title \"Attention\" buttons \"OK\" default button \"OK\" " &
+				else
+		   			echo "Rsync to distant OK" >> $log_file
+			fi
 		fi
 	done
 	# fin de la boucle
@@ -431,7 +446,7 @@ elif [ $1 = "synchro" ]; then
 	# si le fichier débloquant n'est pas là, arrêter le script
 	if [ ! -f $alias_f/debloque_synchro_$USER ]; then
 		echo "" >> $log_file
-		echo " Synchro $now : c'est trop tôt , il n'y a pas de fichiet $alias_f/debloque_synchro_$USER" >> $log_file
+		echo " Synchro $now : c'est trop tôt , il n'y a pas de fichier $alias_f/debloque_synchro_$USER" >> $log_file
 		exit
 	fi	
 

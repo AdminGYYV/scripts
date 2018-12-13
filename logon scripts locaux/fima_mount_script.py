@@ -18,7 +18,7 @@ if 'fima' in expanduser("~"):
 	
 if 'TeachersTmp' in expanduser("~"):
 	os.system("echo 'TeachersTmp user' ")
-	mount_dir_path = "afp://" + logged_user + "@" + HOMEDIR_NETWORK_PATH + logged_user
+	mount_dir_path = "afp://" + logged_user + "@" + HOMEDIR_NETWORK_PATH + logged_user + "_data"
 	
 	cmd = "osascript -e 'mount volume \"" + mount_dir_path + "\"'"
 	os.system("echo " + cmd )
