@@ -56,17 +56,7 @@ synchro_data="$LOCAL_DIR_PATH/$CONFIG_FILE"
 synchro_data_user="$dist_user_folder""/$CONFIG_FILE"
 
 ######################################################################
-######################################################################
-# Télécharge le fichier de config $synchro_data
 
-if [ -d "$LOCAL_DIR_PATH" ]
-then
-	cd "$LOCAL_DIR_PATH"
-
-	curl http://media.gyyv.vd.ch:81/$CONFIG_FILE -o "$CONFIG_FILE"
-	
-	chmod 755 "$synchro_data"
-fi
 
 ############################################### 
 # pour debug
@@ -289,7 +279,7 @@ copy_to_local ()
 		dist_folder="$dist_synchro""$app_dist_folder"
 		dist_pref="$dist_folder""$app_pref"
 		
-		echo "script de synchro pour $pref_local_watch : $now" >> $log_file
+		echo "script de synchro distant->local pour $pref_local_watch : $now" >> $log_file
 		echo "local_folder is     : $local_folder" >> $log_file
 		echo "local_pref is: $local_pref" >> $log_file
 		echo "dist_folder is  : $dist_folder" >> $log_file
@@ -340,12 +330,12 @@ copy_to_dist ()
 		dist_pref="$dist_synchro""$app_dist_folder""$app_pref"
 			
 		echo "" >> $log_file
-		echo "script synchro : $now" >> $log_file
+		echo "script synchro local->distant : $now" >> $log_file
 		echo "local_pref is       : $local_pref" >> $log_file
 		echo "dist_pref is        : $dist_pref" >> $log_file
 		echo "$"
 		
-		if [ -d $local_pref ] || [ -d $local_pref ]
+		if [ -d "$local_pref" ] || [ -f "$local_pref" ]
 		then
 			# copie du dossier/fichier local dans le dossier/fichier distant
 			# option -u pour ne pas effacer un fichier plus récent sur la destination

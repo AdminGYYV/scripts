@@ -1,5 +1,6 @@
 Fichier/Dossier a surveiller,Dossier Distant,Dossier local,"fichier local ( ""/"" pour tous les fichiers du dossier)"
 pref_local_watch,app_dist_folder,app_local_folder,app_pref
+/Library/Preferences/com.apple.dock.plist,Dock,/Library/Preferences,/com.apple.dock.plist
 /Library/Safari/Bookmarks.plist,Safari,/Library/Safari,/Bookmarks.plist
 /Library/Preferences/com.apple.Safari.plist,Safari,/Library/Preferences,/com.apple.Safari.plist
 /Library/Application Support/Firefox/Profiles,Firefox,/Library/Application Support/Firefox/Profiles,/
@@ -10,3 +11,5 @@ pref_local_watch,app_dist_folder,app_local_folder,app_pref
 /Library/Application Support/OpenBoard/document,OpenBoard,/Library/Application Support/OpenBoard,/
 /Library/Application Support/InsightIntermediateItools,InsightIntermediate,/Library/Application Support/InsightIntermediateItools,/
 /Library/Application Support/InsightUpperIntermediateItools,InsightUpperIntermediate,/Library/Application Support/InsightUpperIntermediateItools,/
+/Library/Preferences/com.wacom.wacomtablet.prefs,Wacom,/Library/Preferences,/com.wacom.wacomtablet.prefs
+/Library/Preferences/com.wacom.wacomtouch.prefs,Wacom,/Library/Preferences,/com.wacom.wacomtouch.prefs
