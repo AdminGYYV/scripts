@@ -295,16 +295,19 @@ copy_to_local ()
 			mkdir -p $dist_folder
 		fi	
 		
-		# copie du dossier/fichier distant dans le dossier/fichier local
-		# option -u pour ne pas effacer un fichier plus récent sur la destination
-		echo "ici"
-		rsync -av -u "$dist_pref" "$local_pref"
-		if [[ $? -gt 0 ]] 
-			then
-				message="Problème lors de la copie de ""$dist_folder_name""\n vers le dossier local"
-				osascript -e "display dialog \"$message\" with title \"Attention\" buttons \"OK\" default button \"OK\" " &
-			else
-	   			echo "Rsync to local OK" >> $log_file
+		if [ -d "$dist_pref" ] || [ -f "$dist_pref" ]
+		then
+			# copie du dossier/fichier distant dans le dossier/fichier local
+			# option -u pour ne pas effacer un fichier plus récent sur la destination
+			echo "ici"
+			rsync -av -u "$dist_pref" "$local_pref"
+			if [[ $? -gt 0 ]] 
+				then
+					message="Problème lors de la copie de ""$dist_folder_name""\n vers le dossier local"
+					osascript -e "display dialog \"$message\" with title \"Attention\" buttons \"OK\" default button \"OK\" " &
+				else
+	   				echo "Rsync to local OK" >> $log_file
+			fi
 		fi
 	done
 	# fin de la boucle	

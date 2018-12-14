@@ -5,7 +5,6 @@ pref_local_watch,app_dist_folder,app_local_folder,app_pref
 /Library/Preferences/com.apple.Safari.plist,Safari,/Library/Preferences,/com.apple.Safari.plist
 /Library/Application Support/Firefox/Profiles,Firefox,/Library/Application Support/Firefox/Profiles,/
 /Library/Application Support/Firefox/profiles.ini,Firefox,/Library/Application Support/Firefox,/profiles.ini
-/Library/Application Support/Google/Chrome,Chrome,/Library/Application Support/Google/Chrome,/
 /Library/Application Support/Dock/desktoppicture.db,DesktopPicture,/Library/Application Support/Dock,/desktoppicture.db
 /Library/Application Support/LibreOffice/4/user,LibreOffice/4/user,/Library/Application Support/LibreOffice/4/user,/
 /Library/Application Support/OpenBoard/document,OpenBoard,/Library/Application Support/OpenBoard,/
