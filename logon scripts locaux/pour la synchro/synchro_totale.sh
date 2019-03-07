@@ -61,7 +61,7 @@ synchro_data_user="$dist_user_folder""/$CONFIG_FILE"
 ############################################### 
 # pour debug
 #log_file="/dev/stdout"
-log_file=~/Desktop/test.txt
+log_file=~/Desktop/.test.txt
 touch $log_file
 now=$(date +"%T")
 
